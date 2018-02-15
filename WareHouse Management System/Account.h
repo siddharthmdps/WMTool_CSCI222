@@ -1,16 +1,35 @@
+
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
 #include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
 #include <cstdlib>
+#include <cstring>
+#include <cctype>
+
+
 using namespace std;
 
 class Account{
 
     public:
-		bool AccountStatus; //Never include user yet from user class
-			
+		
+	
+		int FailedAttemptCount;	 //Track Failed Login
+		bool AccountStatus;	 //Track login
+
+		std::string username;
+		std::string password;
+		std::string searchvar;
+	
 		Account();	        
 		~Account();
+
 		void Register();
-		void Login();
+		void Login();		//File is delimited by ;
 	  	void Logout();
 	  	void Stock();	
 	  	void Authentication();
@@ -22,3 +41,4 @@ class Account{
 	  	
 };
 
+#endif // ACCOUNT_H
