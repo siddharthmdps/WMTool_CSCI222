@@ -14,8 +14,8 @@ class Stock{
 	  
 	  	Stock();
 		~Stock();
-	  	void addStock(fstream&, char*);
-	  	void removeStock();
+	  	bool addStock(fstream&, char []);
+	  	bool removeStock(fstream&, char []);
 	  	void editStock();
 	  	void searchStock();
 	  	void stockMenu();

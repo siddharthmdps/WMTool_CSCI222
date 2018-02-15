@@ -5,7 +5,7 @@ Stock::Stock()
 {
 }
 
-void Stock::addStock(fstream& afile,char filename[])
+bool Stock::addStock(fstream& afile,char filename[])
 {
 	string record, id, desc;
 	bool found = false;
@@ -16,14 +16,13 @@ void Stock::addStock(fstream& afile,char filename[])
 	afile.open(filename, ios::in);
 	if(!afile){
 		cout << "File reading failed to open! Exiting..";
-		exit(-1);
+		return false;
 	}	 
 	else{
         while(getline(afile,record)){
 			istringstream ss(record);
 			getline(ss,id,':');
 			getline(ss,desc,':');
-			cout <<"ID"<< id << "Desc"<< desc << "\n";
 			if((id==itemID) && (desc==itemDes)){
 				found = true;
 			}
@@ -46,13 +45,62 @@ void Stock::addStock(fstream& afile,char filename[])
 		cin >> qty;
 		cout << "Enter Transaction Date(DD-MMM-YY): ";
 		cin >> TransactionDate;
-		sf.addToStockFile(afile, filename, itemID, itemDes, MainCategory, SubCategory, price,qty,TransactionDate);
+		if(sf.addToStockFile(afile, filename, itemID, itemDes, MainCategory, SubCategory, price,qty,TransactionDate)){
+				cout << "Record with Item ID: " << itemID << " and Item Description: " << itemDes << " is added to the file!"<< endl;
+				return true;
+		}
+		else{
+			cout << "Adding record to the file failed!"<< endl;
+			return false;
+			}
 	}
 	
 }
 
-void Stock::removeStock()
+bool Stock::removeStock(fstream& afile,char filename[])
 {
+
+	string record, id, desc;
+	fstream bfile;
+	bool found = false;
+	cout << "Enter Item ID:";
+	cin >> itemID;
+	cout << "Enter Item Description:";
+	cin >> itemDes;
+	afile.open(filename, ios::in);
+	bfile.open("temp.txt", ios::out);
+	if(!afile || !bfile){
+		cout << "File reading failed to open! Exiting..";
+		return(false);
+	}	 
+	else{
+        while(getline(afile,record)){
+			istringstream ss(record);
+			getline(ss,id,':');
+			getline(ss,desc,':');
+			if((id==itemID) && (desc==itemDes)){
+				found = true;
+			}
+			else{
+				bfile << record << endl;
+			}
+		}
+	
+	}
+	afile.close();
+	bfile.close();
+	remove(filename);
+	rename("temp.txt", filename);
+	if(found == true){
+		cout << "Record with Item ID: " << itemID << " and Item Description: " << itemDes << " is removed!"<< endl;
+		return true;
+	}
+	else{
+		cout << "Record Not Found! Please Try Again!" << endl;
+		return false;
+	}
+	
+
 }
 
 void Stock::editStock()
@@ -72,6 +120,7 @@ void Stock::stockMenu()
 	char selection;
 	fstream afile;
 	selection = 'Z';
+	while(toupper(selection)!= 'I'){
 	cout << "-------------------------------------------" << endl;
 	cout << "Welcome to the WareHouse Management System" << endl
 		 << "-------------------------------------------" << endl << endl;
@@ -88,7 +137,7 @@ void Stock::stockMenu()
 	cout << "\ti) Quit" << endl << endl;
 	
 	cout << "-------------------------------------------" << endl;
-	while(toupper(selection)!= 'I'){
+	
 		cout << "Your selection: ";
 		cin >> selection;
 		switch(selection){
@@ -98,7 +147,7 @@ void Stock::stockMenu()
 				break;
 			case 'b':
 			case 'B':
-				removeStock();
+				removeStock(afile, "StockFile.txt");
 				break;
 			case 'c':
 			case 'C':
@@ -132,6 +181,8 @@ void Stock::stockMenu()
 				break;
 			
 		}
+		system("PAUSE");
+		system("CLS");
 	} 
 	
 
