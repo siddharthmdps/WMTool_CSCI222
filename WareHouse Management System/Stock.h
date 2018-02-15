@@ -1,23 +1,28 @@
-#include <iostream>
-#include <cstdlib>
-using namespace std;
+
 
 class Stock{
      
 	public: 
-	  Stock();
-	  void addStock();
-	  void removeStock();
-	  void editStock();
-	  void searchStock();
-	  void stockMenu();
-	  void summaryReport();
-	  void displayOutput();
-	  ~Stock();
 	  
-	  char itemID[100]; char itemDes[200]; char MainCategory[100];
-      char SubCategory[100];char IncomingStock[100]; char Outgoing Stock[100];	  
-	  char TransactionID[100]; char TransactionDate[100];
-	  int Treshold; int price;  
+		/*char itemID[100], itemDes[200], MainCategory[100],
+     		 SubCategory[100],   
+	  		 TransactionID[100], TransactionDate[100];*/
+		string itemID, itemDes, MainCategory,
+     		 SubCategory,   
+	  		 TransactionID, TransactionDate;
+	  	int Threshold, price, qty, IncomingStock, OutgoingStock;  
+	  
+	  	Stock();
+		~Stock();
+	  	void addStock(fstream&, char*);
+	  	void removeStock();
+	  	void editStock();
+	  	void searchStock();
+	  	void stockMenu();
+	  	void summaryReport(int);
+	  	void displayOutput();
+	  	
+	  
+	  
 };
 

@@ -1,13 +1,10 @@
-#include <iostream>
-#include <cstdlib>
-using namespace std;
 
 class StockFile{
 
     public:
 	  StockFile();	  
 	  ~StockFile();
-	  void addToStockFile();
+	  void addToStockFile(fstream&, char [], string, string, string, string, int, int, string);
 	  void removeFromStockFile();
 	  void updateToStockFile();
 	  void processStockFile();
