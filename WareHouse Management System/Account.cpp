@@ -49,10 +49,11 @@ string Account::getaccStatus()
 }
 
 
-void Account::Register()
+void Account::registerUser()
 {
 	string line, newusername, newpassword;
-	int UserLocation = 0, userNotFound = 1;
+	int UserLocation = 0, userexist = 0;
+
 	fstream userfile;
 
 	cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
@@ -72,25 +73,50 @@ void Account::Register()
 
 	cout << "Password: ";
 	getline(cin, newpassword);
-								//cout << newusername << newpassword;		//input test
-	userfile.open("userFile.txt", ios::out | ios::app);
-
-	if(!userfile)	
-	{
-		cout  << " Error Has occured while decrypting userFile, program shutting down.";
-		exit(-1);
+	
+	userfile.open("userFile.txt", ios::in);
+	
+	while(getline(userfile, line)) 					//Safeguard from duplicate username
+	{ 	
+	    	if (line.find(newusername, 0) != string::npos) 			
+		{						
+			istringstream iss(line);
+  			string s;
+			
+			getline(iss, s, ';');
+		
+			if(s == newusername)
+			{
+				cout << "\n\nUser already exists!\n\n";
+				userexist = 1;
+			}
+		}	
 	}
 
-	userfile << newusername + ";" + newpassword + ";\n";
+	userfile.close();
+		
+		if(userexist = 0)
+		{						
+			userfile.open("userFile.txt", ios::out | ios::app);
 
-	cout << "\n\nNew User "
-	     << newusername
-	     << " registered!\n\n";   
-	 	
-	userfile.close();   
+			if(!userfile)	
+			{
+				cout  << " Error Has occured while decrypting userFile, program shutting down.";
+				exit(-1);
+			}
+
+			userfile << newusername + ";" + newpassword + ";1;\n";
+
+			cout << "\n\nNew User "
+			     << newusername
+			     << " registered!\n\n";   
+			 	
+			userfile.close(); 
+		}
+	userexist = 0; 							//reset userexist to 0 incase not reset.  
 }
 
-void Account::ManageUser()
+void Account::manageUser()
 {	
 	string line;
 	int UserLocation = 0, userNotFound = 1,choice = 0;
@@ -122,7 +148,7 @@ void Account::ManageUser()
 			case 3: changePassword();
 				break;
 
-			case 4: LoginMenu();
+			case 4: loginMenu();
 				break;
 
 			default: cout << "\nInvalid option selected, try again.\n\n";
@@ -173,7 +199,7 @@ void Account::verifyUser()
 		if(passInvalid == 3)
 		{
 			cout << "\nMax attempts exceeded, locking account\n\n";
-			LockAccount();
+			lockAccount();
 		}	
 		
 	}	
@@ -183,15 +209,57 @@ void Account::verifyUser()
 void Account::changePassword()
 {
 	int Location = getUserLocation();
-
+	int length, length2;
 	string OldPassword = getcurrentpassword();
+	string NewPassword;
 
-	verifyUser();
+	ifstream userfile("userFile.txt"); 		//File to read from
+	ofstream fileout("usertmp.txt");	 	//Temporary file
 
 	cout  << "\nPlease enter current password to continue\n\n";
+
+	verifyUser();
+	
+	cout  << "\nPlease enter new password: ";
+	
+	getline(cin, NewPassword);
+
+
+	    if(!userfile || !fileout)
+	    {
+		cout << "Error opening files!" << endl;
+		exit(0);
+	    }
+
+	    string strTemp;
+	    
+	    while(userfile >> strTemp)
+	    {
+		if (strTemp.find(username, 0) != string::npos) 
+		{
+			length2 = OldPassword.size();			//get old password to compare
+			length = strTemp.size() -(length2 + 3); 	//position before accountlock status 
+	    		//cout << length;
+	   		 strTemp.erase (strTemp.begin() + length, strTemp.end());
+			//cout << searchvar;
+		   	 strTemp = strTemp + NewPassword + ";1;";
+		    	//found = true;
+		}
+		strTemp += "\n";
+		fileout << strTemp;
+		
+	    }
+
+	    userfile.close();
+	    fileout.close();
+
+	    rename( "usertmp.txt" , "userFile.txt" );	//refresh userFile
+
+	    cout << "\nPassword has been changed!\n\n";
+	
 }
 
-void Account::LoginMenu()
+void Account::loginMenu()
 {
 	int choice = 0;
 	
@@ -212,19 +280,19 @@ void Account::LoginMenu()
 		cin  >> choice;
 
 		switch(choice)
-		
-			case 1: Register();			//Register done
+		{
+			case 1: registerUser();			//Register done
 				break;
 			
-			case 2: ManageUser();
+			case 2: manageUser();
 				break;
 			
-			case 3: Stock();
+			case 3: stock();
 				break;
 
 			case 4: cin.clear();			//Clearing buffer for new login
 				cin.ignore(100,'\n');
-				Logout();						
+				logout();						
 				break;
 
 			default: cout << "\nInvalid option selected, try again.\n\n";
@@ -234,7 +302,7 @@ void Account::LoginMenu()
 
 }
 
-void Account::Login()
+void Account::login()
 {
 	static bool AccountStatus = 0;
 
@@ -258,7 +326,7 @@ void Account::Login()
 
 	cout	<< "\nPlease wait while system verifies user... \n\n";
 
-	Authentication();
+	authentication();
 
 	}
 	
@@ -266,7 +334,7 @@ void Account::Login()
 }
 
 
-void Account::Logout()
+void Account::logout()
 {
 	cout <<	"\nThank you for using C-4's WMT "
 	     << username
@@ -278,22 +346,23 @@ void Account::Logout()
 	password.erase  (password.begin(), password.end()); 
 	searchvar.erase (searchvar.begin(), searchvar.end());	//Reset search variable
 
-	Login();
+	login();
 								//cout << username << password << "HI";			//Testing erase		   
 }
 
-void Account::Stock()
+void Account::stock()
 {	   
 
 	//Sid add your StockMenu calling function here.	
 
 }
 
-void Account::Authentication()
+void Account::authentication()
 {	
 	string line;
-	int currentLine = 0, userNotFound = 1;
 	string status;
+
+	int currentLine = 0, userNotFound = 1;
 	int statuscheck;						//Test variable
 	int count = 0;
 
@@ -317,7 +386,6 @@ void Account::Authentication()
 			cout << "User found!\n\n";
 			    
 									//cout << line;
-
 			istringstream iss(line);
   			string s;
 			
@@ -329,28 +397,28 @@ void Account::Authentication()
 									//status = s;
 					statuscheck = s.at(0);		//if '49' means not locked.
 									//cout << "\n\n" << status << "\n\n";
-					
 				}
 			}
 			
 			FailedAttemptCount = 0;
 			userNotFound = 0;
 			AccountStatus = 1;
-			
+
+			Linenumber = currentLine;			//For locking
 									//setaccStatus(status);
 			setUserLocation(currentLine);			//Saves location of user in UserFile for other functions reference
 			setcurrentpassword(password);			//Saves password in private for authentication
 									//statuscheck = getaccStatus();
 									//cout << statuscheck << "HERE";
 	    	}
-		currentLine++;						//cout << currentLine;				//Check which line
+		currentLine++;						//cout << currentLine;	//Check which line, for other usage if needed
 	}
 	if(statuscheck == 48)
 	{
 		cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 			<< "~~ALERT, YOUR ACCOUNT IS LOCKED PLEASE SEEK ADMIN TO UNLOCK.~~\n"
 	        	<< "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
-		Logout();
+		logout();
 	}
 
 	if(userNotFound == 1)
@@ -375,7 +443,7 @@ void Account::Authentication()
 		cout << "\nYou have exceed the maximum attempts, your account is now locked\n\n";
 		FailedAttemptCount = 0;
 		AccountStatus = 0;
-		LockAccount();
+		lockAccount();
 	}
 	
 	userfile.close(); 
@@ -391,7 +459,7 @@ void Account::Authentication()
 
 			cout << "User has logged in!\n\n";
 
-			LoginMenu();
+			loginMenu();
 			exit(0);
 		}
 									//exit(0);	//Test exit	
@@ -399,12 +467,43 @@ void Account::Authentication()
 	
 }
 
-void Account::LockAccount()
-{	   
-	//Do some account locking here
-	cout << "Account is now locked.\n\n";
-	AccountStatus = 0;
-	Logout();
+void Account::lockAccount()
+{	  
+	    int length = 0;
+	    ifstream userfile("userFile.txt"); 		//File to read from
+	    ofstream fileout("usertmp.txt");	 	//Temporary file
+
+	    if(!userfile || !fileout)
+	    {
+		cout << "Error opening files!" << endl;
+		exit(0);
+	    }
+
+	    string strTemp;
+	    
+	    while(userfile >> strTemp)
+	    {
+		if (strTemp.find(username, 0) != string::npos) 
+		{
+
+			length = strTemp.size() -2; 	//position before accountlock status 
+	    		//cout << length;
+	   		 strTemp.erase (strTemp.begin() + length, strTemp.end());
+			//cout << searchvar;
+		   	 strTemp = strTemp + "0;";
+		    	//found = true;
+		}
+		strTemp += "\n";
+		fileout << strTemp;
+		
+	    }
+
+	    userfile.close();
+	    fileout.close();
+
+	    rename( "usertmp.txt" , "userFile.txt" );	//refresh userFile
+		
+	    logout();
 }
 
 void Account::addWarningMessage()
@@ -425,10 +524,9 @@ Account::~Account()
 int main()
 {
     Account A;
-    A.Login();	//Test operations
+    A.login();	//Test operations
 
 }
-
 
 
 
