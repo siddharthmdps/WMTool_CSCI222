@@ -10,6 +10,7 @@
 #include <cstring>
 #include <cctype>
 #include <sstream>
+#include <stdlib.h>
 
 
 using namespace std;
@@ -19,18 +20,23 @@ class Account{
    	 public:
 		
 	
-		int FailedAttemptCount;	 //Track Failed Login
-		bool AccountStatus;	 //Track login
+		int FailedAttemptCount;	 	//Track Failed Login
+		bool AccountStatus;	 	//Track login
+		int Linenumber;
 		
+		//user input and search vars
+		std::string username;		
+		std::string password;		
+		std::string searchvar;		
+		//user input and search vars
 
-		std::string username;
-		std::string password;
-		std::string searchvar;
-	
-		Account();	        
-		~Account();
+		//Construct and Destruct
+		Account();	        	
+		~Account();		
+		//Construct and Destruct
 
-		void setUserLocation(int UL);
+		//mutators and accessors
+		void setUserLocation(int UL);	
 		int  getUserLocation();
 
 		void setaccStatus(string AC);
@@ -38,19 +44,26 @@ class Account{
 
 		void setcurrentpassword(string CP);
 		string getcurrentpassword();
+		//mutators and accessors
+		void login();			
+		
+		void loginMenu();		//LoginMenu and its options
+		void registerUser();		//1.
+		void manageUser();		//2.
+		void stock();			//3.
+		void logout();			//4.
+					
+		void lockAccount();		//when system needs to lock account
+		void verifyUser();		//used when needed to verify user
+	  	void authentication();
 
-		void Register();
-		void LoginMenu();
-		void Login();			//File is delimited by ;
-	  	void Logout();	
-	  	void Stock();	
-	  	void Authentication();
-	  	void LockAccount();
-	  	void addWarningMessage();
+						//ManageUser options
+		void changePassword();		
+	  	
+	  	void addWarningMessage();	//Stock related features
 	  	void displayWarningMessage();
-	  	void ManageUser();
-		void changePassword();
-		void verifyUser();		//Called when user needs to be verified while doing certain tasks
+	  	
+		
 		
 	
 	private:
