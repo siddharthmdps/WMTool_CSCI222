@@ -2,17 +2,18 @@
 #include <cstdlib>
 
 struct stockrecord{
-		string id, desc, maincat, subcat, qty, price, compdate;
-		//int quantity;
+		string id, desc, maincat, subcat, qty, price, compdate, in, out;
 		
 	};
-
+	
 class StockSummary{
 
       public:
 	     StockSummary();
 		 ~StockSummary();
-		 int String2Int(string&);
+		 string incrementDate(string);
+		 string incrementMonth(string);
+		 string incrementYear(string);
 		 string Int2String(int&);
 		 void dailyReport(fstream&,char []);
 		 void weeklyReport(fstream&,char []);

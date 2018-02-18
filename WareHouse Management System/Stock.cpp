@@ -13,33 +13,15 @@ bool Stock::addStock(fstream& afile,char filename[])
 	cout << "Enter Item ID:";
 	cin >> itemID;
 	cout << "Enter Item Description:";
-	cin >> itemDes;
-	afile.open(filename, ios::in);
-	if(!afile){
-		cout << "File reading failed to open! Exiting..";
-		return false;
-	}	 
-	else{
-        while(getline(afile,record)){
-			istringstream ss(record);
-			getline(ss,id,':');
-			getline(ss,desc,':');
-			if((id==itemID) && (desc==itemDes)){
-				found = true;
-			}
-		}
-	
-	}
-	afile.close();
-	if(found == true){
-		cout << "Invalid Input. Duplicate already exist!" << endl;
-	}
-	else{
+	cin.ignore();
+	getline(cin, itemDes);
 		StockFile sf;
 		cout << "Enter Item Category: ";
-		cin >> MainCategory;
+		cin.ignore();
+		getline(cin, MainCategory);
 		cout << "Enter Item Sub-Category: ";
-		cin >> SubCategory;
+		cin.ignore();
+		getline(cin, SubCategory);
 		cout << "Enter Price:";
 		cin >> price;
 		cout << "Enter Item Quantity: ";
@@ -54,7 +36,6 @@ bool Stock::addStock(fstream& afile,char filename[])
 			cout << "Adding record to the file failed!"<< endl;
 			return false;
 			}
-	}
 	
 }
 
@@ -67,7 +48,8 @@ bool Stock::removeStock(fstream& afile,char filename[])
 	cout << "Enter Item ID:";
 	cin >> itemID;
 	cout << "Enter Item Description:";
-	cin >> itemDes;
+	cin.ignore();
+	getline(cin, itemDes);
 	afile.open(filename, ios::in);
 	bfile.open("temp.txt", ios::out);
 	if(!afile || !bfile){
@@ -152,40 +134,43 @@ bool Stock::editStock(fstream& afile,char filename[])
 				cin  >> subChoice;
 				if (subChoice == 1)
 				{
-					do{	    
 						cout << "Enter new Description: ";
 						cin.ignore();
 						getline(cin, itemDes);
-					}while(itemDes=="");
 					
 				}
 				if (subChoice == 2)
 				{	  
 					cout << "Enter new Category: ";
+					cin.ignore();
 					getline(cin,MainCategory);
 					
 				}
 				if (subChoice == 3)
 				{	  
 					cout << "Enter new Sub-Category: ";
+					cin.ignore();
 					getline(cin, SubCategory);
 					
 				}
 				if (subChoice == 4)
 				{	  
 					cout << "Enter new Price: ";
+					cin.ignore();
 					getline(cin, price);
 					
 				}
 				if (subChoice == 5)
 				{	  
 					cout << "Enter new Quantity: ";
+					cin.ignore();
 					getline(cin, qty);
 					
 				}
 				if (subChoice == 6)
 				{	  
 					cout << "Enter new Transacted-Date: ";
+					cin.ignore();
 					getline(cin, TransactionDate);
 					
 				}
@@ -270,50 +255,6 @@ void Stock::summaryReport(fstream& afile,char filename[], int option)
 	if(option == 1)ss.weeklyReport(afile, filename);
 	if(option == 2)ss.monthlyReport(afile, filename);	  
 	if(option == 3)ss.yearlyReport(afile, filename);
-/*
-	fstream afile;	  
-	string id, desc, record, maincat, subcat, qty, transdate, price;
-	bool found = false;
-
-	afile.open("StockFile.txt", ios::in);
-	if(!afile){
-		cout << "File reading failed to open! Exiting..";
-	}	 
-	else{
-		cout << left << setw (10)  << "Item ID" 
-			 << left << setw (30) << "Item Description"
-			 << left << setw (15) << "Main Cat" 
-			 << left << setw (15) << "Sub Cat"
-			 << left << setw (15) << "Price" 
-			 << left << setw (12) << "Quantity"
-			 << left << setw (10) << "Date" << endl;
-        while(getline(afile,record))
-		{
-			istringstream ss(record);
-			getline(ss,id,':');
-			getline(ss,desc,':');
-			getline(ss,maincat,':');
-			getline(ss,subcat,':');
-			getline(ss,price,':');
-			getline(ss,qty,':');
-			getline(ss,transdate,'\n');
- 	//	 if(id==itemID)
-	   		{
-				cout << left << setw (10)  << id;
-				cout << left << setw (30) << desc ;
-				cout << left << setw (15) << maincat;
-				cout << left << setw (15) << subcat;
-				cout << left << setw (15) << price;
-				cout << left << setw (12) << qty;
-				cout << left << setw (10) << transdate;
-				cout << endl;
-			}
-			
-		}
-	
-	}
-	afile.close();
-*/
 }
 
 void Stock::stockMenu()
