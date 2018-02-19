@@ -1,4 +1,5 @@
 #include "Account.h"
+#include "Stock.cpp"
 
 
 Account::Account()
@@ -127,10 +128,8 @@ void Account::manageUser()
 	while(1)
 	{
 		cout << "\nPlease select an option!\n"
-		     << "1. View Account Info\n"
-		     << "2. Edit Account Info\n"
-		     << "3. Change Password\n"
-		     << "4. Back\n\n";
+		     << "1. Change Password\n"
+		     << "2. Back\n\n";
 
 		cout << "Your Choice: ";
 
@@ -138,61 +137,17 @@ void Account::manageUser()
 
 		switch(choice)
 		{
-			case 1: viewInfo();	//View Account Info
-				break;
 			
-			case 2: editInfo();	//Edit Account Info
-				break;
-			
-			case 3: changePassword();
+			case 1: changePassword();
 				break;
 
-			case 4: loginMenu();
+			case 2: loginMenu();
 				break;
 
 			default: cout << "\nInvalid option selected, try again.\n\n";
 		}
 
 	}
-
-}
-
-void Account::viewInfo()
-{
-	 fstream userfile("userFile.txt"); 
-	 
-	 string strTemp;
-	 string s;
-	 
-	 
-	 
-	 int currentlocation = 0;
-	 
-	 while(userfile >> strTemp)
-	 {
-	 	istringstream iss(strTemp);
-  		string s;
-	 	
-	    if (UserLocation == currentlocation) 
-		{
-			
-			getline(iss, s, ';');	//User
-			cout << s;
-			getline(iss, s, ';');	//Pass
-			getline(iss, s, ';');	//State of account
-			cout << s;
-		}
-	 	
-	 	currentlocation++;
-	 
-	 }
-	 
-	 userfile.close();
-
-}
-
-void Account::editInfo()
-{
 
 }
 
@@ -307,6 +262,7 @@ void Account::changePassword()
 
 void Account::loginMenu()
 {
+	Stock s;
 	int choice = 0;
 	
 	cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
@@ -333,7 +289,7 @@ void Account::loginMenu()
 			case 2: manageUser();
 				break;
 			
-			case 3: stock();
+			case 3: s.stockMenu();
 				break;
 
 			case 4: cin.clear();			//Clearing buffer for new login
