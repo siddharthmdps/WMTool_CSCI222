@@ -1,30 +1,23 @@
-#include "Encryption.h"
 
 
-Encryption::Encrption()
-{
-}
+class Encryption{
 
-void Encryption::EncryptUserFile()
-{	   
-}
+	public: int EncryptionKey, DecryptionKey;
+			bool EncryptionStatus;
 
+			Encryption();
+			~Encryption();
 
-void Encryption::DecryptUserFile()
-{	   
-}
-
-
-void Encryption::EncryptStockFile()
-{	   
-}
+			void encryptUserFile();
+			void decryptUserFile();
+			
+			void encryptStockFile();
+			void decryptStockFile();
 
 
-void Encryption::DecryptStockFile()
-{	   
-}
 
-Encryption::~Encryption()
-{
-}
+};
+
+
+
 
