@@ -265,12 +265,13 @@ void Account::loginMenu()
 	Stock s;
 	int choice = 0;
 	
-	cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-		<< "~~~~~~~~~~~~~~~~~~~~~~~~~~Login Menu~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-	        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 	
 	while(1)
 	{
+	cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+			<< "~~~~~~~~~~~~~~~~~~~~~~~~~~Login Menu~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+	        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	
 		cout << "\nPlease select an option!\n"
 		     << "1. Register New User\n"
 		     << "2. Manage Account\n"
@@ -368,7 +369,7 @@ void Account::stock()
 
 void Account::authentication()
 {	
-	//e.decryptUserFile();
+	e.decryptUserFile();
 
 	string line;
 	string status;

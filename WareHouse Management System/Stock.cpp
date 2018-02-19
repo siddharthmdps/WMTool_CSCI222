@@ -261,6 +261,7 @@ void Stock::summaryReport(fstream& afile,char filename[], int option)
 
 void Stock::stockMenu()
 {
+	system("CLS");
 	StockFile sf;
 	char selection;
 	fstream afile;

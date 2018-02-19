@@ -15,8 +15,9 @@ using namespace std;
 
 
 int main(){
-
+	Encryption e;
 	Account A;
+	//e.encryptUserFile();
 	A.login();
 
 //Stock s;
