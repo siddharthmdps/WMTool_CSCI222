@@ -1,33 +1,18 @@
 
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
-
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <cstdlib>
-#include <cstring>
-#include <cctype>
-#include <sstream>
-#include <stdlib.h>
-
-
-using namespace std;
 
 class Account{
 
    	 public:
 		
-	
-		int FailedAttemptCount;	 	//Track Failed Login
-		bool AccountStatus;	 	//Track login
-		int Linenumber;
+		Encryption e;
 		
+		int FailedAttemptCount;	 	//Track Failed Login
+		int Linenumber, encryptcheck;
+		bool AccountStatus;	 	//Track login
 		//user input and search vars
 		std::string username;		
 		std::string password;		
-		std::string searchvar;		
+		std::string searchvar;	
 		//user input and search vars
 
 		//Construct and Destruct
@@ -57,7 +42,8 @@ class Account{
 		void verifyUser();		//used when needed to verify user
 	  	void authentication();
 
-						//ManageUser options
+		void viewInfo();				//ManageUser options
+		void editInfo();
 		void changePassword();		
 	  	
 	  	void addWarningMessage();	//Stock related features
@@ -73,4 +59,4 @@ class Account{
 	  	
 };
 
-#endif // ACCOUNT_H
+
