@@ -32,6 +32,7 @@ void Encryption::encryptUserFile()
 	    fileout.close();
 		
 		remove( "userFile.txt" );
+		rename("xxxxxxxx.txt", "xxxxxxxx.o");
 
 	    cout << "\nEncryption successful\n\n";
 	
@@ -41,6 +42,7 @@ void Encryption::decryptUserFile()
 {
 	string reading;
 	char character;
+	rename("xxxxxxxx.o", "xxxxxxxx.txt");
 	ifstream userfile("xxxxxxxx.txt"); 	//File to read from
 	ofstream fileout("userFile.txt");	   	  //Temporary file
 
@@ -86,6 +88,7 @@ void Encryption::encryptStockFile()
 	    fileout.close();
 		
 		remove( "StockFile.txt" );
+		rename("yyyyyyyy.txt", "yyyyyyyy.o");
 
 	    cout << "\nEncryption successful\n\n";
 		
@@ -97,6 +100,7 @@ void Encryption::decryptStockFile()
 
 	string reading;
 	char character;
+	rename("yyyyyyyy.o", "yyyyyyyy.txt");
 	ifstream stockfile("yyyyyyyy.txt"); 	  //File to read from
 	ofstream fileout("StockFile.txt");	   	  //Temporary file
 
