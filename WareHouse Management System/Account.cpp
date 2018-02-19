@@ -290,9 +290,12 @@ void Account::loginMenu()
 			case 2: manageUser();
 				break;
 			
-			case 3: s.stockMenu();
+			case 3:{
+				e.decryptStockFile();
+				s.stockMenu();
+				e.encryptStockFile();
 				break;
-
+			}
 			case 4: cin.clear();			//Clearing buffer for new login
 				cin.ignore(100,'\n');
 				logout();						

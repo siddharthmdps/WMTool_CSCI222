@@ -17,11 +17,7 @@ using namespace std;
 int main(){
 	Encryption e;
 	Account A;
-	//e.encryptUserFile();
 	A.login();
-
-//Stock s;
-//s.stockMenu();
 cout << "------------------------------------------" << endl;
 cout << "\tThank You! For Using the System!!!" << endl;
 cout << "------------------------------------------" << endl;
