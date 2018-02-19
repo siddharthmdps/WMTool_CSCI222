@@ -1,20 +1,23 @@
-#include <iostream>
-#include <cstdlib>
-using namespace std;
+
 
 class Encryption{
 
-    public:
-	  Encryption();	   
-	  ~Encryption();
-	  void EncryptUserFile();
-	  void DecryptUserFile();
-	  void EncryptStockFile();
-	  void DecryptStockFile();
-	  
-	  
-	  bool EncryptionStatus;
-	  char EncryptionKey[100]; 
-      char DecryptionKey[100];
+	public: int EncryptionKey, DecryptionKey;
+			bool EncryptionStatus;
+
+			Encryption();
+			~Encryption();
+
+			void encryptUserFile();
+			void decryptUserFile();
+			
+			void encryptStockFile();
+			void decryptStockFile();
+
+
+
 };
+
+
+
 
