@@ -1,8 +1,8 @@
-#include <iostream>
-#include <cstdlib>
+//#include <iostream>
+//#include <cstdlib>
 
 struct stockrecord{
-		string id, desc, maincat, subcat, qty, price, compdate, in, out;
+		string id, desc, maincat, subcat, qty, price, compdate, in, out, endDate;
 		
 	};
 	

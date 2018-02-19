@@ -174,10 +174,10 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 	}	 
 	else{
 		cout << left << setw (5)  << "Day"
-			 << left << setw (10)  << "From" 
-			 << left << setw (10)  << "To" 
-			 << left << setw (30) << "Item Description"
-			 << left << setw (15) << "Amount Per Unit($)"
+			 << left << setw (15)  << "From" 
+			 << left << setw (15)  << "To" 
+			 << left << setw (50) << "Item Description"
+			 << left << setw (25) << "Amount Per Unit($)"
 			 << left << setw (15) << "In"
 			 << left << setw (15) << "Out" 
 			 << left << setw (15) << "Aggregated Total" << endl;
@@ -198,6 +198,7 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 				getline(ss,month,'-');
 				getline(ss,year,'\n');
 				s.compdate=date+"-"+month+"-"+year;
+				s.endDate=s.compdate;
 				if(month=="Jan")monthnum="01";
 				if(month=="Feb")monthnum="02";
 				if(month=="Mar")monthnum="03";
@@ -212,6 +213,14 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 				if(month=="Dec")monthnum="12";
 				if(dates[i] == ("20"+year+monthnum+date)){
 					if(stockvector.empty()){
+						if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.in="0";
+									s.out=s.qty;
+								}
 						stockvector.push_back(s);
 					}
 					else{
@@ -219,9 +228,9 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 						for(int j=0;j<stockvector.size();j++){
 							if(stockvector[j].id == s.id){
 								foundrecord=true;
+								stockvector[j].endDate=s.compdate;
 								int quantity = atoi(stockvector[j].qty.c_str())+atoi(s.qty.c_str());
 								stockvector[j].qty=Int2String(quantity);
-								cout << atoi(s.qty.c_str());
 								if(atoi(s.qty.c_str()) >=0){
 									int instock = atoi(stockvector[j].in.c_str())+atoi(s.qty.c_str());
 									stockvector[j].in=Int2String(instock);
@@ -233,6 +242,14 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 							}
 						}
 						if(foundrecord==false){
+						if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.out=s.qty;
+									s.in="0";
+								}
 						stockvector.push_back(s);	    						
 						}
 					}
@@ -240,20 +257,20 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 				}	
 				 
 			}
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			for(int j=0;j<stockvector.size();j++){
 					cout << left << setw (5)  << i+1
-			 			 << left << setw (10)  << "From" 
-						 << left << setw (10)  << "To" 
-						 << left << setw (30) << stockvector[j].desc 
-						 << left << setw (15) << stockvector[j].price
+			 			 << left << setw (15)  << stockvector[j].compdate 
+						 << left << setw (15)  << stockvector[j].endDate 
+						 << left << setw (50) << stockvector[j].desc 
+						 << left << setw (25) << stockvector[j].price
 						 << left << setw (15) << stockvector[j].in
 						 << left << setw (15) << stockvector[j].out 
 						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
 			stockvector.clear();
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
@@ -261,6 +278,153 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 
 void StockSummary::weeklyReport(fstream& afile,char filename[])
 {
+
+	
+	stockrecord s;
+	string monthnum, date, month, year, record, fromdate, todate, startdate, enddate;
+	vector<stockrecord> stockvector;
+	vector<string> dates;
+	ostringstream convert;
+	int startDate;
+	int endDate;
+	bool found = false;
+	
+	cout << "From(DD-MM-YYYY): ";
+	cin >> fromdate;
+	cout << "To(DD-MM-YYYY): ";
+	cin >> todate;
+	startdate = fromdate.at(6);
+	startdate += fromdate.at(7);
+	startdate += fromdate.at(8);
+	startdate += fromdate.at(9);
+	startdate += fromdate.at(3);
+	startdate += fromdate.at(4);
+	startdate += fromdate.at(0);
+	startdate += fromdate.at(1);
+	enddate = todate.at(6);
+	enddate += todate.at(7);
+	enddate += todate.at(8);
+	enddate += todate.at(9);
+	enddate += todate.at(3);
+	enddate += todate.at(4);
+	enddate += todate.at(0);
+	enddate += todate.at(1);
+	dates.push_back(startdate);
+	cout << left << setw (5)  << "Week"
+		 << left << setw (15)  << "From" 
+		 << left << setw (15)  << "To" 
+		 << left << setw (50) << "Item Description"
+		 << left << setw (25) << "Amount Per Unit($)"
+		 << left << setw (15) << "In"
+		 << left << setw (15) << "Out" 
+		 << left << setw (15) << "Aggregated Total" << endl;
+		while(startdate!=enddate){
+		cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+		for(int i=0;i<6;i++){
+			if(startdate!=enddate){
+				startdate=incrementDate(startdate);
+				dates.push_back(startdate);
+			}
+		}
+		afile.open(filename, ios::in);
+		if(!afile){
+			cout << "File reading failed to open! Exiting..";
+		}	 
+		else{
+			for(int i=0; i<dates.size();i++){
+				afile.clear();
+				afile.seekg(0,ios::beg);
+				while(getline(afile,record))
+				{
+					istringstream ss(record);
+					getline(ss,s.id,':');
+					getline(ss,s.desc,':');
+					getline(ss,s.maincat,':');
+					getline(ss,s.subcat,':');
+					getline(ss,s.price,':');
+					getline(ss,s.qty,':');
+					getline(ss,date,'-');
+					getline(ss,month,'-');
+					getline(ss,year,'\n');
+					s.compdate=date+"-"+month+"-"+year;
+					s.endDate=s.compdate;
+					if(month=="Jan")monthnum="01";
+					if(month=="Feb")monthnum="02";
+					if(month=="Mar")monthnum="03";
+					if(month=="Apr")monthnum="04";
+					if(month=="May")monthnum="05";
+					if(month=="Jun")monthnum="06";
+					if(month=="Jul")monthnum="07";
+					if(month=="Aug")monthnum="08";
+					if(month=="Sep")monthnum="09";
+					if(month=="Oct")monthnum="10";
+					if(month=="Nov")monthnum="11";
+					if(month=="Dec")monthnum="12";
+					if(dates[i] == ("20"+year+monthnum+date)){
+					if(stockvector.empty()){
+					if(atoi(s.qty.c_str()) >=0){
+						s.in=s.qty;
+						s.out="0";
+					}
+					if(atoi(s.qty.c_str()) <0){
+						s.in="0";
+						s.out=s.qty;
+								}
+						stockvector.push_back(s);
+					}
+					else{
+						bool foundrecord=false;
+						for(int j=0;j<stockvector.size();j++){
+							if(stockvector[j].id == s.id){
+								foundrecord=true;
+								stockvector[j].endDate=s.compdate;
+								int quantity = atoi(stockvector[j].qty.c_str())+atoi(s.qty.c_str());
+								stockvector[j].qty=Int2String(quantity);
+								if(atoi(s.qty.c_str()) >=0){
+									int instock = atoi(stockvector[j].in.c_str())+atoi(s.qty.c_str());
+									stockvector[j].in=Int2String(instock);
+								}
+								if(atoi(s.qty.c_str()) <0){
+									int outstock = atoi(stockvector[j].out.c_str())+atoi(s.qty.c_str());
+									stockvector[j].out=Int2String(outstock);
+								}
+							}
+					}
+						if(foundrecord==false){
+							if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+							}
+							if(atoi(s.qty.c_str()) <0){
+									s.out=s.qty;
+									s.in="0";
+							}
+							stockvector.push_back(s);	    						
+						}
+					}//endif
+					
+				}//endwhile	  
+				 
+			}//endfor
+			for(int j=0;j<stockvector.size();j++){
+					cout << left << setw (5)  << i+1
+			 			 << left << setw (15)  << stockvector[j].compdate 
+						 << left << setw (15)  << stockvector[j].endDate 
+						 << left << setw (50) << stockvector[j].desc 
+						 << left << setw (25) << stockvector[j].price
+						 << left << setw (15) << stockvector[j].in
+						 << left << setw (15) << stockvector[j].out 
+						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
+					
+			} 
+			
+			
+		}
+	}//else
+	afile.close();
+	stockvector.clear();
+	cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+	}
 }
 
 void StockSummary::monthlyReport(fstream& afile,char filename[])
@@ -295,24 +459,20 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 			startdate=incrementMonth(startdate);
 			dates.push_back(startdate);
 		}
-
-
-	for(int i=0;i<dates.size();i++){
-		cout <<dates[i]<<endl;
-	}
+		
 	afile.open(filename, ios::in);
 	if(!afile){
 		cout << "File reading failed to open! Exiting..";
 	}	 
 	else{
-		cout << left << setw (5)  << "S.No";
-		cout << left << setw (10)  << "Item ID" 
-			 << left << setw (30) << "Item Description"
-			 << left << setw (15) << "Main Cat" 
-			 << left << setw (15) << "Sub Cat"
-			 << left << setw (15) << "Price" 
-			 << left << setw (12) << "Quantity"
-			 << left << setw (10) << "Date" << endl;
+		cout << left << setw (5)  << "Month"
+			 << left << setw (15)  << "From" 
+			 << left << setw (15)  << "To" 
+			 << left << setw (50) << "Item Description"
+			 << left << setw (25) << "Amount Per Unit($)"
+			 << left << setw (15) << "In"
+			 << left << setw (15) << "Out" 
+			 << left << setw (15) << "Aggregated Total" << endl;
 			 
 		for(int i=0;i<dates.size();i++){
 			afile.clear();
@@ -330,6 +490,7 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 				getline(ss,month,'-');
 				getline(ss,year,'\n');
 				s.compdate=date+"-"+month+"-"+year;
+				s.endDate=s.compdate;
 				if(month=="Jan")monthnum="01";
 				if(month=="Feb")monthnum="02";
 				if(month=="Mar")monthnum="03";
@@ -344,6 +505,14 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 				if(month=="Dec")monthnum="12";
 				if(dates[i] == ("20"+year+monthnum)){
 					if(stockvector.empty()){
+					if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.in="0";
+									s.out=s.qty;
+								}
 						stockvector.push_back(s);
 					}
 					else{
@@ -351,11 +520,28 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 						for(int j=0;j<stockvector.size();j++){
 							if(stockvector[j].id == s.id){
 								foundrecord=true;
+								stockvector[j].endDate=s.compdate;
 								int quantity = atoi(stockvector[j].qty.c_str())+atoi(s.qty.c_str()); 
 								stockvector[j].qty=Int2String(quantity);
+								if(atoi(s.qty.c_str()) >=0){
+									int instock = atoi(stockvector[j].in.c_str())+atoi(s.qty.c_str());
+									stockvector[j].in=Int2String(instock);
+								}
+								if(atoi(s.qty.c_str()) <0){
+									int outstock = atoi(stockvector[j].out.c_str())+atoi(s.qty.c_str());
+									stockvector[j].out=Int2String(outstock);
+								}
 							}
 						}
 						if(foundrecord==false){
+						if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.in="0";
+									s.out=s.qty;
+								}
 						stockvector.push_back(s);	    						
 						}
 					}
@@ -363,21 +549,20 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 				}	
 				 
 			}
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
-			for(int i=0;i<stockvector.size();i++){
-			cout << left << setw (5)  << i+1;
-			cout << left << setw (10)  << stockvector[i].id;
-					cout << left << setw (30) << stockvector[i].desc ;
-					cout << left << setw (15) << stockvector[i].maincat;
-					cout << left << setw (15) << stockvector[i].subcat;
-					cout << left << setw (15) << stockvector[i].price;
-					cout << left << setw (12) << stockvector[i].qty;
-					cout << left << setw (10) << stockvector[i].compdate;
-					cout << endl;
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			for(int j=0;j<stockvector.size();j++){
+					cout << left << setw (5)  << i+1
+			 			 << left << setw (15)  << stockvector[j].compdate 
+						 << left << setw (15)  << stockvector[j].endDate 
+						 << left << setw (50) << stockvector[j].desc 
+						 << left << setw (25) << stockvector[j].price
+						 << left << setw (15) << stockvector[j].in
+						 << left << setw (15) << stockvector[j].out 
+						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			stockvector.clear();
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
@@ -422,13 +607,14 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 		cout << "File reading failed to open! Exiting..";
 	}	 
 	else{
-		cout << left << setw (10)  << "Item ID" 
-			 << left << setw (30) << "Item Description"
-			 << left << setw (15) << "Main Cat" 
-			 << left << setw (15) << "Sub Cat"
-			 << left << setw (15) << "Price" 
-			 << left << setw (12) << "Quantity"
-			 << left << setw (10) << "Date" << endl;
+		cout << left << setw (5)  << "Year"
+			 << left << setw (15)  << "From" 
+			 << left << setw (15)  << "To" 
+			 << left << setw (50) << "Item Description"
+			 << left << setw (25) << "Amount Per Unit($)"
+			 << left << setw (15) << "In"
+			 << left << setw (15) << "Out" 
+			 << left << setw (15) << "Aggregated Total" << endl;
 			 
 		for(int i=0;i<dates.size();i++){
 			afile.clear();
@@ -446,6 +632,7 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 				getline(ss,month,'-');
 				getline(ss,year,'\n');
 				s.compdate=date+"-"+month+"-"+year;
+				s.endDate=s.compdate;
 				if(month=="Jan")monthnum="01";
 				if(month=="Feb")monthnum="02";
 				if(month=="Mar")monthnum="03";
@@ -460,6 +647,14 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 				if(month=="Dec")monthnum="12";
 				if(dates[i] == ("20"+year)){
 					if(stockvector.empty()){
+						if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.in="0";
+									s.out=s.qty;
+								}
 						stockvector.push_back(s);
 					}
 					else{
@@ -467,32 +662,49 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 						for(int j=0;j<stockvector.size();j++){
 							if(stockvector[j].id == s.id){
 								foundrecord=true;
+								stockvector[j].endDate=s.compdate;
 								int quantity = atoi(stockvector[j].qty.c_str())+atoi(s.qty.c_str()); 
 								stockvector[j].qty=Int2String(quantity);
+								if(atoi(s.qty.c_str()) >=0){
+									int instock = atoi(stockvector[j].in.c_str())+atoi(s.qty.c_str());
+									stockvector[j].in=Int2String(instock);
+								}
+								if(atoi(s.qty.c_str()) <0){
+									int outstock = atoi(stockvector[j].out.c_str())+atoi(s.qty.c_str());
+									stockvector[j].out=Int2String(outstock);
+								}
 							}
 						}
 						if(foundrecord==false){
-						stockvector.push_back(s);	    						
+							if(atoi(s.qty.c_str()) >=0){
+									s.in=s.qty;
+									s.out="0";
+								}
+								if(atoi(s.qty.c_str()) <0){
+									s.in="0";
+									s.out=s.qty;
+								}	   	   	   	   	   	   
+							stockvector.push_back(s);	    						
 						}
 					}
 					
 				}	
 				 
 			}
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
-			for(int i=0;i<stockvector.size();i++){
-			cout << left << setw (10)  << stockvector[i].id;
-					cout << left << setw (30) << stockvector[i].desc ;
-					cout << left << setw (15) << stockvector[i].maincat;
-					cout << left << setw (15) << stockvector[i].subcat;
-					cout << left << setw (15) << stockvector[i].price;
-					cout << left << setw (12) << stockvector[i].qty;
-					cout << left << setw (10) << stockvector[i].compdate;
-					cout << endl;
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			for(int j=0;j<stockvector.size();j++){
+					cout << left << setw (5)  << i+1
+			 			 << left << setw (15)  << stockvector[j].compdate 
+						 << left << setw (15)  << stockvector[j].endDate 
+						 << left << setw (50) << stockvector[j].desc 
+						 << left << setw (25) << stockvector[j].price
+						 << left << setw (15) << stockvector[j].in
+						 << left << setw (15) << stockvector[j].out 
+						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
-			}
-			cout<< endl << "----------------------------------------------------------------------------------------------------------------------------------------------"<<endl; 
+			} 
 			stockvector.clear();
+			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
