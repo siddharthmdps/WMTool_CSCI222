@@ -1,7 +1,6 @@
 #include "Account.h"
 
 
-
 Account::Account()
 {
 }
@@ -139,10 +138,10 @@ void Account::manageUser()
 
 		switch(choice)
 		{
-			case 1: //View Account Info
+			case 1: viewInfo();	//View Account Info
 				break;
 			
-			case 2: //Edit Account Info
+			case 2: editInfo();	//Edit Account Info
 				break;
 			
 			case 3: changePassword();
@@ -158,10 +157,50 @@ void Account::manageUser()
 
 }
 
+void Account::viewInfo()
+{
+	 fstream userfile("userFile.txt"); 
+	 
+	 string strTemp;
+	 string s;
+	 
+	 
+	 
+	 int currentlocation = 0;
+	 
+	 while(userfile >> strTemp)
+	 {
+	 	istringstream iss(strTemp);
+  		string s;
+	 	
+	    if (UserLocation == currentlocation) 
+		{
+			
+			getline(iss, s, ';');	//User
+			cout << s;
+			getline(iss, s, ';');	//Pass
+			getline(iss, s, ';');	//State of account
+			cout << s;
+		}
+	 	
+	 	currentlocation++;
+	 
+	 }
+	 
+	 userfile.close();
+
+}
+
+void Account::editInfo()
+{
+
+}
+
 void Account::verifyUser()
 {
 	int valid = 0, firstpass = 0, passInvalid = 0;
 
+	string password = getcurrentpassword();
 	string passcheck;
 
 	while(valid != 1)
@@ -211,6 +250,7 @@ void Account::changePassword()
 	int Location = getUserLocation();
 	int length, length2;
 	string OldPassword = getcurrentpassword();
+	//cout << OldPassword;
 	string NewPassword;
 
 	ifstream userfile("userFile.txt"); 		//File to read from
@@ -224,7 +264,6 @@ void Account::changePassword()
 	
 	getline(cin, NewPassword);
 
-
 	    if(!userfile || !fileout)
 	    {
 		cout << "Error opening files!" << endl;
@@ -237,11 +276,12 @@ void Account::changePassword()
 	    {
 		if (strTemp.find(username, 0) != string::npos) 
 		{
+	
 			length2 = OldPassword.size();			//get old password to compare
 			length = strTemp.size() -(length2 + 3); 	//position before accountlock status 
 	    		//cout << length;
 	   		 strTemp.erase (strTemp.begin() + length, strTemp.end());
-			//cout << searchvar;
+			//cout << searchvar;						//strTemp.end()
 		   	 strTemp = strTemp + NewPassword + ";1;";
 		    	//found = true;
 		}
@@ -252,11 +292,17 @@ void Account::changePassword()
 
 	    userfile.close();
 	    fileout.close();
+		
+		remove( "userFile.txt" );
 
 	    rename( "usertmp.txt" , "userFile.txt" );	//refresh userFile
 
 	    cout << "\nPassword has been changed!\n\n";
 	
+		setcurrentpassword(NewPassword);
+		//string temp = getcurrentpassword();
+		//cout << temp;
+		//OldPassword = NewPassword;
 }
 
 void Account::loginMenu()
@@ -307,12 +353,19 @@ void Account::login()
 	static bool AccountStatus = 0;
 
 	cout    << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-		<< "~~~~~~~~~~Welcome to C-4's Warehouse Management Tool~~~~~~~~~~\n"
+			<< "~~~~~~~~~~Welcome to C-4's Warehouse Management Tool~~~~~~~~~~\n"
 	        << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
 
 	while(1)						//Program will loop here Acting as the first screen for the user
 	{
-
+	
+	if(encryptcheck == 1)
+	{
+	
+		e.encryptUserFile();
+		encryptcheck = 0;
+	}
+	
 	AccountStatus = 0;
 
 	cout	<< "Welcome to the system, please Login to access stock!\n\n";
@@ -345,7 +398,7 @@ void Account::logout()
 	username.erase  (username.begin(), username.end()); 	//Reset username and password
 	password.erase  (password.begin(), password.end()); 
 	searchvar.erase (searchvar.begin(), searchvar.end());	//Reset search variable
-
+	encryptcheck = 1;
 	login();
 								//cout << username << password << "HI";			//Testing erase		   
 }
@@ -359,6 +412,8 @@ void Account::stock()
 
 void Account::authentication()
 {	
+	//e.decryptUserFile();
+
 	string line;
 	string status;
 
@@ -475,7 +530,7 @@ void Account::lockAccount()
 
 	    if(!userfile || !fileout)
 	    {
-		cout << "Error opening files!" << endl;
+		cout << "Error opening files=!" << endl;
 		exit(0);
 	    }
 
@@ -500,7 +555,9 @@ void Account::lockAccount()
 
 	    userfile.close();
 	    fileout.close();
-
+		
+		remove( "userFile.txt" );
+		
 	    rename( "usertmp.txt" , "userFile.txt" );	//refresh userFile
 		
 	    logout();
@@ -521,12 +578,13 @@ Account::~Account()
 {
 }
 
-int main()
-{
-    Account A;
-    A.login();	//Test operations
+//int main()
+//{
+//    Account A;
+//    A.login();	Test operations
 
-}
+//}
+
 
 
 
