@@ -257,7 +257,7 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 				}	
 				 
 			}
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			for(int j=0;j<stockvector.size();j++){
 					cout << left << setw (5)  << i+1
 			 			 << left << setw (15)  << stockvector[j].compdate 
@@ -269,8 +269,11 @@ void StockSummary::dailyReport(fstream& afile,char filename[])
 						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
+			if(stockvector.size()==0){
+				cout << left << setw (5)  << i+1 <<endl;
+			}
 			stockvector.clear();
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
@@ -285,6 +288,7 @@ void StockSummary::weeklyReport(fstream& afile,char filename[])
 	ostringstream convert;
 	int startDate;
 	int endDate;
+	int count=1;
 	bool found = false;
 	
 		cout << "From(DD-MM-YYYY): ";
@@ -411,9 +415,9 @@ void StockSummary::weeklyReport(fstream& afile,char filename[])
 		}//endfor
 	}//endelse
 	afile.close();
-	cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+	cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			for(int j=0;j<stockvector.size();j++){
-					cout << left << setw (5)  << "1"
+					cout << left << setw (5)  << count
 			 			 << left << setw (15)  << stockvector[j].compdate 
 						 << left << setw (15)  << stockvector[j].endDate 
 						 << left << setw (50) << stockvector[j].desc 
@@ -423,9 +427,13 @@ void StockSummary::weeklyReport(fstream& afile,char filename[])
 						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
+			if(stockvector.size()==0){
+				cout << left << setw (5)  << count <<endl;
+			}
+			count++;
 			stockvector.clear();
 			dates.clear();
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 
 	}//endwhile
 }
@@ -552,7 +560,7 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 				}	
 				 
 			}
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			for(int j=0;j<stockvector.size();j++){
 					cout << left << setw (5)  << i+1
 			 			 << left << setw (15)  << stockvector[j].compdate 
@@ -564,8 +572,11 @@ void StockSummary::monthlyReport(fstream& afile,char filename[])
 						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
+			if(stockvector.size()==0){
+				cout << left << setw (5)  << i+1 <<endl;
+			}
 			stockvector.clear();
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
@@ -694,7 +705,7 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 				}	
 				 
 			}
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 			for(int j=0;j<stockvector.size();j++){
 					cout << left << setw (5)  << i+1
 			 			 << left << setw (15)  << stockvector[j].compdate 
@@ -706,8 +717,11 @@ void StockSummary::yearlyReport(fstream& afile,char filename[])
 						 << left << setw (15) << atoi(stockvector[j].qty.c_str())*atoi(stockvector[j].price.c_str())<< endl;
 					
 			} 
+			if(stockvector.size()==0){
+				cout << left << setw (5)  << i+1 <<endl;
+			}
 			stockvector.clear();
-			cout<< endl << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 		}
 	}
 	afile.close();
