@@ -6,8 +6,9 @@ Stock::Stock()
 {
 }
 
-bool Stock::addStock(fstream& afile,char filename[])
+void Stock::addStock(fstream& afile,char filename[])
 {
+	cout << "\n Add Stock Menu: \n";
 	string record, id, desc;
 	bool found = false;
 	cout << "Enter Item ID:";
@@ -17,10 +18,8 @@ bool Stock::addStock(fstream& afile,char filename[])
 	getline(cin, itemDes);
 		StockFile sf;
 		cout << "Enter Item Category: ";
-		cin.ignore();
 		getline(cin, MainCategory);
 		cout << "Enter Item Sub-Category: ";
-		cin.ignore();
 		getline(cin, SubCategory);
 		cout << "Enter Price:";
 		cin >> price;
@@ -29,19 +28,19 @@ bool Stock::addStock(fstream& afile,char filename[])
 		cout << "Enter Transaction Date(DD-MMM-YY): ";
 		cin >> TransactionDate;
 		if(sf.addToStockFile(afile, filename, itemID, itemDes, MainCategory, SubCategory, price,qty,TransactionDate)){
-				cout << "Record with Item ID: " << itemID << " and Item Description: " << itemDes << " is added to the file!"<< endl;
-				return true;
+				cout << "\nRecord with Item ID: " << itemID << " and Item Description: " << itemDes << " is added to the file!"<< endl;
+				return ;
 		}
 		else{
-			cout << "Adding record to the file failed!"<< endl;
-			return false;
+			cout << "\nAdding record to the file failed!"<< endl;
+			return ; 
 			}
 	
 }
 
-bool Stock::removeStock(fstream& afile,char filename[])
+void Stock::removeStock(fstream& afile,char filename[])
 {
-
+	cout << "\nRemove Stock Menu: \n";
 	string record, id, desc;
 	fstream bfile;
 	bool found = false;
@@ -53,8 +52,8 @@ bool Stock::removeStock(fstream& afile,char filename[])
 	afile.open(filename, ios::in);
 	bfile.open("temp.txt", ios::out);
 	if(!afile || !bfile){
-		cout << "File reading failed to open! Exiting..";
-		return(false);
+		cout << "\nFile reading failed to open! Exiting..";
+		return;
 	}	 
 	else{
         while(getline(afile,record)){
@@ -75,35 +74,35 @@ bool Stock::removeStock(fstream& afile,char filename[])
 	remove(filename);
 	rename("temp.txt", filename);
 	if(found == true){
-		cout << "Record with Item ID: " << itemID << " and Item Description: " << itemDes << " is removed!"<< endl;
-		return true;
+		cout << "\nRecord with Item ID: " << itemID << " and Item Description: " << itemDes << " is removed!"<< endl;
+		return;
 	}
 	else{
-		cout << "Record Not Found! Please Try Again!" << endl;
-		return false;
+		cout << "\nRecord Not Found! Please Try Again!" << endl;
+		return;
 	}
 	
 
 }
 
-bool Stock::editStock(fstream& afile,char filename[])
+void Stock::editStock(fstream& afile,char filename[])
 {
-	string id, des, record, price, qty;
+	string id, des, record, price, qty, tempdes,tempmaincat,tempsubcat,tempprice;
 	int subChoice;
 	bool found = false;
 	fstream bfile;
 	afile.open(filename, ios::in);
 	bfile.open("temp.txt", ios::out);
 	
-	cout << "\nWelcome to Edit Stock" << endl;
+	cout << "\nEdit Stock Menu: \n" << endl;
 	cout << "______________________"  << endl;
-	cout << "\nPlease enter Item ID that you want to edit: ";
+	cout << "\nEnter Item ID: ";
 	cin  >> id;
 		
 	if(!afile)
 	{
 		cout << "File reading failed to open! Exiting..";
-		return(false);
+		return;
 	}
 	else
 	{
@@ -119,64 +118,66 @@ bool Stock::editStock(fstream& afile,char filename[])
 			getline(ss,TransactionDate,'\n');
 			
 			if(id == itemID){
-				found = true;
-				cout << "Record with Item ID: " << id << " and Item Description: " << itemDes << " is found!"<< endl;
+				if(!found){
+				cout << "\nRecord with Item ID: " << id << " and Item Description: " << itemDes << " is found!"<< endl;
 				cout << "\nPlease select what would you like to Edit (Any other input will return to main screen!)"<< endl;
 				cout << "-----------------------------------------" << endl;
 				cout << "1) Description " << endl;
 				cout << "2) Category " << endl;
 				cout << "3) Sub Category " << endl;
 				cout << "4) Price " << endl;
-				cout << "5) Quantity " << endl;
-				cout << "6) Transacted Date" << endl;
 				cout << "-----------------------------------------" << endl;
 				cout << "Your choice: ";
 				cin  >> subChoice;
+				cout << endl;
+				}
+				
 				if (subChoice == 1)
-				{
+				{	
+					if(!found){
 						cout << "Enter new Description: ";
 						cin.ignore();
-						getline(cin, itemDes);
+						getline(cin, tempdes);
+					}
+					itemDes=tempdes;
 					
 				}
 				if (subChoice == 2)
-				{	  
-					cout << "Enter new Category: ";
-					cin.ignore();
-					getline(cin,MainCategory);
+				{	
+					if(!found){  
+						cout << "Enter new Category: ";
+						cin.ignore();
+						getline(cin,tempmaincat);
+					}
+					MainCategory=tempmaincat;
 					
 				}
 				if (subChoice == 3)
-				{	  
+				{	
+					if(!found){  
 					cout << "Enter new Sub-Category: ";
 					cin.ignore();
-					getline(cin, SubCategory);
-					
+					getline(cin, tempsubcat);
+					}
+					SubCategory=tempsubcat;
 				}
 				if (subChoice == 4)
-				{	  
+				{	 
+					if(!found){ 
 					cout << "Enter new Price: ";
 					cin.ignore();
 					getline(cin, price);
+					}
+					price=tempprice;
 					
 				}
-				if (subChoice == 5)
-				{	  
-					cout << "Enter new Quantity: ";
-					cin.ignore();
-					getline(cin, qty);
-					
-				}
-				if (subChoice == 6)
-				{	  
-					cout << "Enter new Transacted-Date: ";
-					cin.ignore();
-					getline(cin, TransactionDate);
-					
-				}
-				cout << "Item is now changed to:\nID:"<< itemID<<"\nDescription:"
+				if(!found){
+				cout << "\nItem is now changed to:\nID:"<< itemID<<"\nDescription:"
 			 <<itemDes<<"\nMain-Category:"<<MainCategory<<"\nSub-Category:"<<SubCategory
-			 <<"\nPrice:"<<price<<"\nQuantity:"<<qty<<"\nTrans-Date:"<<TransactionDate<<"\n";	
+			 <<"\nPrice:"<<price << endl;
+			 }
+			 found = true;	
+			 
 			}
 			bfile<<itemID<<":"<<itemDes<<":"<<MainCategory<<":"<<SubCategory<<":"<<price<<":"<<qty<<":"<<TransactionDate<<"\n";
 		}
@@ -187,21 +188,22 @@ bool Stock::editStock(fstream& afile,char filename[])
 	rename("temp.txt", filename);  
 	if (found == true)
 	{	
-		return true;
+		return ;
 	}
 	else{
 		cout << "Item with id - " << id << " could not be found! " << endl;
 		cout << "Please try again" << endl;
-		return false;
+		return ;
 	}
 
 }
 
 void Stock::searchStock(fstream& afile,char filename[])
 {
+	cout << "\nSearch Stock Menu: \n";
 	string keyword, record, qty, price;
 	bool found = false;
-	cout << "Enter any keyword to search(ID or Name or Main/Sub-Category):";
+	cout << "Enter any keyword to search:";
 	cin >> keyword;
 
 	afile.open(filename, ios::in);
@@ -249,7 +251,7 @@ void Stock::searchStock(fstream& afile,char filename[])
 
 void Stock::summaryReport(fstream& afile,char filename[], int option)
 {
-
+	cout << "\n Summary Report Menu: \n";
 	StockSummary ss;
 	if(option == 0)ss.dailyReport(afile, filename);
 	if(option == 1)ss.weeklyReport(afile, filename);
@@ -259,6 +261,7 @@ void Stock::summaryReport(fstream& afile,char filename[], int option)
 
 void Stock::stockMenu()
 {
+	StockFile sf;
 	char selection;
 	fstream afile;
 	selection = 'Z';
@@ -285,35 +288,35 @@ void Stock::stockMenu()
 		switch(selection){
 			case 'a':
 			case 'A':
-				addStock(afile, "StockFile.txt");
+				addStock(afile, sf.filename);
 				break;
 			case 'b':
 			case 'B':
-				removeStock(afile, "StockFile.txt");
+				removeStock(afile,  sf.filename);
 				break;
 			case 'c':
 			case 'C':
-				editStock(afile, "StockFile.txt");
+				editStock(afile,  sf.filename);
 				break;
 			case 'd':
 			case 'D':
-				searchStock(afile, "StockFile.txt");
+				searchStock(afile,  sf.filename);
 				break;
 			case 'e':
 			case 'E':
-				summaryReport(afile, "StockFile.txt", 0);
+				summaryReport(afile,  sf.filename, 0);
 				break;
 			case 'f':
 			case 'F':
-				summaryReport(afile, "StockFile.txt", 1);
+				summaryReport(afile,  sf.filename, 1);
 				break;
 			case 'g':
 			case 'G':
-				summaryReport(afile, "StockFile.txt", 2);
+				summaryReport(afile,  sf.filename, 2);
 				break;
 			case 'h':
 			case 'H':
-				summaryReport(afile, "StockFile.txt", 3);
+				summaryReport(afile,  sf.filename, 3);
 				break;
 			case 'i':
 			case 'I':
@@ -328,10 +331,6 @@ void Stock::stockMenu()
 	} 
 	
 
-}
-
-void Stock::displayOutput()
-{
 }
 
 Stock::~Stock()

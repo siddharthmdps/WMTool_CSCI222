@@ -11,13 +11,12 @@ class Stock{
 	  
 	  	Stock();
 		~Stock();
-	  	bool addStock(fstream&, char []);
-	  	bool removeStock(fstream&, char []);
-	  	bool editStock(fstream&,char []);
+	  	void addStock(fstream&, char []);
+	  	void removeStock(fstream&, char []);
+	  	void editStock(fstream&,char []);
 	  	void searchStock(fstream&,char []);
 	  	void stockMenu();
 	  	void summaryReport(fstream&,char [], int);
-	  	void displayOutput();
 	  	
 	  
 	  

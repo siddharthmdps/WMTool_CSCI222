@@ -3,6 +3,7 @@
 
 StockFile::StockFile()
 {
+strcpy(filename, "StockFile.txt");
 }
 
 bool StockFile::addToStockFile(fstream& afile, char filename[], string id, string desc, string maincat, string subcat, int price, int qty, string trans)
@@ -17,25 +18,6 @@ bool StockFile::addToStockFile(fstream& afile, char filename[], string id, strin
 	}
 	afile.close();
 	return true;  
-}
-
-
-void StockFile::updateToStockFile()
-{	   
-}
-
-
-void StockFile::processStockFile()
-{	   
-}
-
-
-void StockFile::removeFromStockFile()
-{	   
-}
-
-void StockFile::searchInStockFile()
-{	   
 }
 
 StockFile::~StockFile()
